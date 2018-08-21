@@ -45,6 +45,7 @@
     <Compile Include="Parser\AST\ConditionalExpression .cs" />
     <Compile Include="Parser\AST\BinaryExpression.cs" />
     <Compile Include="Parser\AST\IExpression.cs" />
+    <Compile Include="Parser\AST\IfExpression.cs" />
     <Compile Include="Parser\AST\IStatment.cs" />
     <Compile Include="Parser\AST\NumberExpression.cs" />
     <Compile Include="Parser\AST\UnariExpression.cs" />
