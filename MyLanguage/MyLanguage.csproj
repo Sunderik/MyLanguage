@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Parser\AST\ConditionalExpression .cs" />
     <Compile Include="Parser\AST\BinaryExpression.cs" />
     <Compile Include="Parser\AST\IExpression.cs" />
     <Compile Include="Parser\AST\IStatment.cs" />

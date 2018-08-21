@@ -5,7 +5,7 @@ namespace MyLanguage.Parser
 {
     class Lexer
     {
-        private const string operator_chars = ";+-*/%()";
+        private const string operator_chars = ";+-*/%()=<>";
         private static readonly TokenType[] operator_tokens = new TokenType[] {
             TokenType.COMENT,
             TokenType.PLUS,
@@ -14,7 +14,11 @@ namespace MyLanguage.Parser
             TokenType.DEVIDE,
             TokenType.PERCENT,
             TokenType.LBRACKET,
-            TokenType.RBRACKET };
+            TokenType.RBRACKET,
+            TokenType.EQ,
+            TokenType.LT,
+            TokenType.GT
+        };
         private bool nocomment = false;
         private readonly string input;
         private readonly int length;
@@ -76,13 +80,16 @@ namespace MyLanguage.Parser
                 buffer.Append(current);
                 current = Next();
             }
-            if (buffer.ToString().ToLower().Equals("do"))
+            string word = buffer.ToString().ToLower();
+            switch (word)
             {
-                AddToken(TokenType.DO);
-            }
-            else
-            {
-                AddToken(TokenType.WORD, buffer.ToString());
+                case "do":
+                    AddToken(TokenType.DO); break;
+                case "if":
+                    AddToken(TokenType.IF); break;
+                default:
+                    AddToken(TokenType.WORD, word);
+                    break;
             }
         }
         private void TokenizeOperator()

@@ -36,7 +36,33 @@ namespace MyLanguage.Parser
 
         private IExpression Expression()
         {
-            return Additive();
+            return Conditional();
+        }
+
+        private IExpression Conditional()
+        {
+            IExpression result = Multiplicative();
+
+            while (true)
+            {
+                if (Match(TokenType.EQ))
+                {
+                    result = new ConditionalExpression('=', result, Additive());
+                    continue;
+                }
+                if (Match(TokenType.LT))
+                {
+                    result = new ConditionalExpression('<', result, Additive());
+                    continue;
+                }
+                if (Match(TokenType.GT))
+                {
+                    result = new ConditionalExpression('>', result, Additive());
+                    continue;
+                }
+                break;
+            }
+            return result;
         }
 
         private IExpression Additive()

@@ -6,10 +6,12 @@ namespace MyLanguage.Parser
 
         NUMBER,
         WORD,
-        COMENT,
+
         //keyword
         DO,
         LET,
+        IF,
+
 
         PLUS,
         MINUS,
@@ -20,7 +22,10 @@ namespace MyLanguage.Parser
 
         LBRACKET, // (
         RBRACKET, // )
-
+        COMENT, //;
+        EQ, //=
+        LT, //<
+        GT, //>
         EOF
 
     }
