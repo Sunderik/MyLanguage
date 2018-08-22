@@ -12,20 +12,22 @@
         }
         public int Eval()
         {
+            int result;
             switch (operation)
             {
                 case '-':
-                    return expr1.Eval() - expr2.Eval();
+                    result= expr1.Eval() - expr2.Eval();break;
                 case '+':
-                    return expr1.Eval() + expr2.Eval();
+                    result= expr1.Eval() + expr2.Eval(); break;
                 case '/':
-                    return expr1.Eval() / expr2.Eval();
+                    result= expr1.Eval() / expr2.Eval(); break;
                 case '*':
-                    return expr1.Eval() * expr2.Eval();
+                    result= expr1.Eval() * expr2.Eval(); break;
                 case '%':
-                    return expr1.Eval() % expr2.Eval();
-                default: return -1;
+                    result= expr1.Eval() % expr2.Eval(); break;
+                default: result= -999; break;
             }
+            return result;
         }
 
         public override string ToString()

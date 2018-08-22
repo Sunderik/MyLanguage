@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace MyLanguage.Parser.AST
 {
-    public interface IStatment
+    class FunctionDefine
     {
-        void Execute();
     }
 }

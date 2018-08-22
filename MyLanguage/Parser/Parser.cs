@@ -20,10 +20,10 @@ namespace MyLanguage.Parser
             size = tokens.Count;
         }
 
-        public IList<IExpression> parse()
+        public IList<IExpression> Parse()
         {
             IList<IExpression> result = new List<IExpression>();
-            if (tokens[0].Type == TokenType.DO || tokens[0].Type == TokenType.COMENT)
+            if (tokens[0].Type == TokenType.DO)
             {
                 while (!Match(TokenType.EOF))
                 {
@@ -33,6 +33,17 @@ namespace MyLanguage.Parser
             }
             else throw new Exception("No executed command");
         }
+
+        //private IExpression Function()
+        //{
+        //    string name = consume(TokenType.WORD).Text;
+        //    List<string> argNames = new List<string>();
+        //    while (!Match(TokenType.EQ))
+        //    {
+        //        argNames.Add(consume(TokenType.WORD).Text);
+        //        Match(TokenType.COMMA);
+        //    }
+        //}
 
         private IExpression Expression()
         {
@@ -45,26 +56,41 @@ namespace MyLanguage.Parser
 
             while (true)
             {
-                if (Match(TokenType.EQ))
+                if (Match(TokenType.EQEQ))
                 {
-                    result = new ConditionalExpression('=', result, Multiplicative());
+                    result = new ConditionalExpression(ConditionalExpression.Operators.EQEQ, result, Additive());
+                    continue;
+                }
+                if (Match(TokenType.EXCLEQ))
+                {
+                    result = new ConditionalExpression(ConditionalExpression.Operators.EXCLEQ, result, Additive());
                     continue;
                 }
                 if (Match(TokenType.LT))
                 {
-                    result = new ConditionalExpression('<', result, Multiplicative());
+                    result = new ConditionalExpression(ConditionalExpression.Operators.LT, result, Additive());
+                    continue;
+                }
+                if (Match(TokenType.LTEQ))
+                {
+                    result = new ConditionalExpression(ConditionalExpression.Operators.LTEQ, result, Additive());
                     continue;
                 }
                 if (Match(TokenType.GT))
                 {
-                    result = new ConditionalExpression('>', result, Multiplicative());
+                    result = new ConditionalExpression(ConditionalExpression.Operators.GT, result, Additive());
+                    continue;
+                }
+                if (Match(TokenType.GTEQ))
+                {
+                    result = new ConditionalExpression(ConditionalExpression.Operators.GTEQ, result, Additive());
                     continue;
                 }
                 break;
             }
             return result;
         }
-        
+
         private IExpression Additive()
         {
             IExpression result = Multiplicative();
@@ -141,17 +167,33 @@ namespace MyLanguage.Parser
             {
                 return new WordExpression(current.Text);
             }
+            if (Match(TokenType.IF))
+            {
+                IExpression cond = Expression();
+
+                IfExpression ret = new IfExpression(cond,Get(0),Get(1));
+                pos++;pos++;
+                return ret;
+            }
+            //if (Match(TokenType.LET))
+            //{
+            //    return Function();
+            //}
             if (Match(TokenType.LBRACKET))
             {
                 IExpression result = Expression();
                 Match(TokenType.RBRACKET);
                 return result;
             }
-            if (Match(TokenType.COMENT))
-            {
-                return new WordExpression(current.Text);
-            }
             throw new Exception("Unknown expression");
+        }
+
+        private Token consume(TokenType type)
+        {
+            Token current = Get(0);
+            if (type != current.Type) throw new Exception("Token " + current + " doesn't match " + type);
+            pos++;
+            return current;
         }
 
         private bool Match(TokenType type)

@@ -26,6 +26,10 @@ namespace MyLanguage.Parser
         EQ, //=
         LT, //<
         GT, //>
+        EQEQ, //==
+        LTEQ, //<=
+        GTEQ, //>=
+        EXCLEQ, //!=
         EOF
 
     }

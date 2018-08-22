@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MyLanguage.Parser.AST
+namespace MyLanguage.Lib
 {
-    public interface IStatment
+   public interface IFunction
     {
-        void Execute();
+        int Execute(List<int> args);
     }
 }

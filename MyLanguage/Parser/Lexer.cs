@@ -1,23 +1,28 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using System;
 
 namespace MyLanguage.Parser
 {
     class Lexer
     {
-        private const string operator_chars = ";+-*/%()=<>";
-        private static readonly TokenType[] operator_tokens = new TokenType[] {
-            TokenType.COMENT,
-            TokenType.PLUS,
-            TokenType.MINUS,
-            TokenType.MULTIPLY,
-            TokenType.DEVIDE,
-            TokenType.PERCENT,
-            TokenType.LBRACKET,
-            TokenType.RBRACKET,
-            TokenType.EQ,
-            TokenType.LT,
-            TokenType.GT
+        private const string operator_chars = ";+-*/%()=<>!";
+        private static readonly Dictionary<string, TokenType> Map = new Dictionary<string, TokenType>()
+        {
+           {";",TokenType.COMENT },
+           {"+",TokenType.PLUS },
+           {"-",TokenType.MINUS },
+           {"*",TokenType.MULTIPLY },
+           {"/",TokenType.DEVIDE },
+           {"%",TokenType.PERCENT },
+           {"(", TokenType.LBRACKET },
+           {")", TokenType.RBRACKET },
+           {"==",TokenType.EQEQ },
+           {"!=",TokenType.EXCLEQ },
+           {"<", TokenType.LT },
+           {"<=",TokenType.LTEQ },
+           {">", TokenType.GT },
+           {">=",TokenType.GTEQ }
         };
         private bool nocomment = false;
         private readonly string input;
@@ -87,6 +92,8 @@ namespace MyLanguage.Parser
                     AddToken(TokenType.DO); break;
                 case "if":
                     AddToken(TokenType.IF); break;
+                case "let":
+                    AddToken(TokenType.LET); break;
                 default:
                     AddToken(TokenType.WORD, word);
                     break;
@@ -94,9 +101,35 @@ namespace MyLanguage.Parser
         }
         private void TokenizeOperator()
         {
-            int position = operator_chars.IndexOf(Peek(0));
-            AddToken(operator_tokens[position]);
-            Next();
+            char current = Peek(0);
+            if (current == ';')
+            {
+                Next();
+                TokenizeComment();
+                return;
+            }
+                StringBuilder buffer = new StringBuilder();
+            while (true)
+            {
+                string text = buffer.ToString();
+                bool flag = Map.ContainsKey(text + current);
+                if (!Map.ContainsKey(text + current) && !String.IsNullOrEmpty(text))
+                {
+                    AddToken(Map[text]);
+                    return;
+                }
+                buffer.Append(current);
+                current = Next();
+            }
+        }
+
+        private void TokenizeComment()
+        {
+            char current = Peek(0);
+            while ("\r\n\0".IndexOf(current) == -1)
+            {
+                current = Next();
+            }
         }
 
         private char Next()

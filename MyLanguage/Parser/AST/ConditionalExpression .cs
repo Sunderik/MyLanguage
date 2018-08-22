@@ -2,10 +2,20 @@
 {
     public sealed class ConditionalExpression : IExpression
     {
-        private readonly IExpression expr1, expr2;
-        private readonly char operation;
+        public enum Operators
+        {
+            EQEQ,
+            EXCLEQ,
+            LT,
+            LTEQ,
+            GT,
+            GTEQ
+        }
 
-        public ConditionalExpression(char operation, IExpression expr1, IExpression expr2)
+        private readonly IExpression expr1, expr2;
+        private readonly Operators operation;
+
+        public ConditionalExpression(Operators operation, IExpression expr1, IExpression expr2)
         {
             this.operation = operation;
             this.expr1 = expr1;
@@ -15,11 +25,12 @@
         {
             switch (operation)
             {
-                case '>':
-                    return expr1.Eval() > expr2.Eval() ? 1 : 0;
-                case '<':
-                    return expr1.Eval() < expr2.Eval() ? 1 : 0;
-                case '=':
+                case Operators.LT: return expr1.Eval() < expr2.Eval() ? 1 : 0;
+                case Operators.LTEQ: return expr1.Eval() <= expr2.Eval() ? 1 : 0;
+                case Operators.GT: return expr1.Eval() > expr2.Eval() ? 1 : 0;
+                case Operators.GTEQ: return expr1.Eval() >= expr2.Eval() ? 1 : 0;
+                case Operators.EXCLEQ: return expr1.Eval() != expr2.Eval() ? 1 : 0;
+                case Operators.EQEQ:
                 default: return expr1.Eval() == expr2.Eval() ? 1 : 0;
             }
         }

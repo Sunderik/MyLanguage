@@ -12,32 +12,33 @@ namespace MyLanguage
         {
             try
             {
+                Console.Write("Enter a way to the file with the program: ");
                 string path = Console.ReadLine();
                 try
                 {
                     string[] input = File.ReadAllLines(path);
 
+
                     foreach (string str in input)
                     {
-                        IList<Pars.Token> tokens = (new Pars.Lexer(str)).Tokenize();
-                        //foreach (Pars.Token token in tokens)
-                        //{
-                        //    Console.WriteLine(token);
-                        //}
-
-                        IList<IExpression> expressions = (new Pars.Parser(tokens)).parse();
-                        if (expressions.Count == 1)
+                        if (!string.IsNullOrEmpty(str))
                         {
-                            if (!expressions[0].ToString().Contains(";"))
-                                foreach (IExpression expr in expressions)
+                            IList<Pars.Token> tokens = (new Pars.Lexer(str)).Tokenize();
+                            //foreach (Pars.Token token in tokens)
+                            //{
+                            //    Console.WriteLine(token);
+                            //}
+                            if (tokens.Count > 0)
+                            {
+                                IList<IExpression> expressions = (new Pars.Parser(tokens)).Parse();
+                                if (expressions[0].ToString()=="") expressions.RemoveAt(0);
+                                if(expressions.Count>1)
                                 {
-                                    Console.WriteLine("Result: {0}", expr.Eval());
+                                        Console.WriteLine("Result: {0}", expressions[expressions.Count-1].Eval());
                                 }
-                        }
-                        else
-                        {
-                            IExpression expr = expressions[expressions.Count - 1].ToString().Contains(";") ? expressions[expressions.Count - 2] : expressions[expressions.Count - 1];
-                            Console.WriteLine("Result: {0}", expr.Eval());
+                                else Console.WriteLine("Result: {0}", expressions[0].Eval());
+
+                            }
                         }
                     }
                 }
